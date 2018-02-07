@@ -75,6 +75,7 @@ abstract class Common extends Config {
         $this->addLine("hostname {$FQDN[0]}");
         $this->addLine("ip domain-name {$FQDN[1]}");
         $this->addUser($this->getOptVal('AdminUsername'), $this->getOptVal('AdminPassword'), 15);
+        $this->addEnable($this->getOptVal('EnablePassword'));
         
         
         $Line = $this->addBlock("line con 0", ConfBlock::POS_LINE);
@@ -87,7 +88,7 @@ abstract class Common extends Config {
         $this->addLine("!          ");
         $this->addLine("!    /\    ");
         $this->addLine("!   /  \   If your device doesn't have an RSA key yet, execute the following command:");
-        $this->addLine("!  / !! \  crypto key generate rsa general-keys modulus 2048");
+        $this->addLine("!  / !! \  crypto key generate rsa general-keys modulus 4096");
         $this->addLine("! <------>  ");
         $this->addLine("ip ssh version 2");
         if ($Port != 22 && $Port != 0) {

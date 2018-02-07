@@ -33,12 +33,11 @@ abstract class Common extends Config {
         $this->addLine("ip dhcp bootp ignore");
         $this->addLine("clock timezone CET 1 0");
         $this->addLine("clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00");
-        $this->addLine("service timestamps log datetime localtime show-timezone");
         $this->addLine("logging buffered 4096");
 
         $Block = $this->addBlock('aaa new-model', ConfBlock::POS_AAA, true);
         $Block->addLine("aaa authentication enable default none");
-        $Block->addLine("aaa authentication ppp default local");        
+        $Block->addLine("aaa authentication ppp default local");
         $Block->addLine("aaa authorization exec default none");
         $Block->addLine("aaa authorization commands 0 default none");
         $Block->addLine("aaa authorization commands 15 default none");
@@ -48,13 +47,19 @@ abstract class Common extends Config {
         $this->addOpt('FQDNHostname', 'router1.lan.local', 'string', 'Specify in FQDN format; domain name will also be used for DHCP scopes');
         $this->addOpt('AdminUsername', 'admin', 'string', 'This user will be created with privilege level 15');
         $this->addOpt('AdminPassword', 'admin', 'string');
+        $this->addOpt('EnablePassword', 'enable', 'string');
         
         $this->addOpt('EnableSSH', true, 'bool');
     }
     
     public function addUser($Username, $Password, $PrivLevel = 0)
     {
-        $this->addLine("username {$Username} privilege {$PrivLevel} password {$Password}");
+        $this->addLine("username {$Username} privilege {$PrivLevel} algorithm-type sha256 secret {$Password}");
+    }
+    
+    public function addEnable($Enable)
+    {
+        $this->addLine("enable algorithm-type sha256 {$Enable}");
     }
     
     

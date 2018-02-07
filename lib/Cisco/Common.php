@@ -11,6 +11,13 @@ abstract class Common extends Config {
         parent::__construct();
         $this->addLine("service password-encryption");
         $this->addLine("no service pad");
+        $this->addLine("service tcp-keepalives-in");
+        $this->addLine("service tcp-keepalives-out");
+        $this->addLine("service timestamps debug datetime msec localtime show-timezone year");
+        $this->addLine("service timestamps log datetime msec localtime show-timezone year");
+        $this->addLine("service password-encryption");
+        $this->addLine("service linenumber");
+        $this->addLine("service sequence-numbers");
         $this->addLine("no ip forward-protocol nd");
         $this->addLine("no ip source-route");
         /*

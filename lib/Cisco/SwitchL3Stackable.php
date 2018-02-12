@@ -14,7 +14,12 @@ class SwitchL3Stackable extends Common {
         $this->addOpt('PortBase', 'GigabitEthernet', 'select:GigabitEthernet,FastEthernet', 'GigabitEthernet, FastEthernet, etc...', 'Switch');
         $this->addOpt('StackNo', '1', 'int', 'Stack nr of this switch (default is 1 when unstacked)', 'Switch');
         $this->addOpt('NROfPorts', 28, 'int', 'Number of switchports', 'Switch');
-        $this->addOpt('MgmtIntf', 'Loopback0', 'string', 'Loopback interfaced used for management');
+        $this->addOpt('MgmtIntf', 'Loopback0', 'string', 'Loopback interfaced used for management');
+        $this->addOpt('MgmtIntfIPv4Addr', '192.168.0.2', 'string', 'Loopback interface IP Address');
+        $this->addOpt('MgmtIntfIPv4Mask', '255.255.255.255', 'string', 'Subnet Mask');
+
+        $this->addOpt('RoutingProtcol', 'EIGRP', 'select:EIGRP,OSPFv2,OSPFv3', 'Routing Protocol', 'Routing');
+
 #        $this->addOpt('MgmtIntf', 'Loopback0', 'string', 'Loopback interfaced used for management', 'Layer-3');
 #        $this->addOpt('ManagementVLAN', 1, 'int');
 #        $this->addOpt('ManagementIP', '192.168.0.2', 'ip');
@@ -114,6 +119,12 @@ class SwitchL3Stackable extends Common {
             $i++;
         }
         
+        $IntBlock = $this->addBlock("interface {$this->getOptVal('MgmtIntf')}", ConfBlock::POS_INT);
+        $IntBlock->addLine('no shutdown');
+        $IntBlock->addLine("ip address {$this->getOptVal('MgmtIntfIPv4Addr')} {$this->getOptVal('MgmtIntfIPv4Mask')}");
+        $IntBlock->addLine('no ip unreachables');
+        $IntBlock->addLine('no ip proxy-arp');
+        $IntBlock->addLine('no ip redirects');
 #        $IntBlock = $this->addBlock("interface vlan {$this->getOptVal('ManagementVLAN')}", ConfBlock::POS_INT);
 #        $IntBlock->addLine('no shutdown');
 #        $IntBlock->addLine("ip address {$this->getOptVal('ManagementIP')} {$this->getOptVal('ManagementMask')}");

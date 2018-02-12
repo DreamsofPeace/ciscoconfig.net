@@ -102,6 +102,8 @@ abstract class Common extends Config {
         $Block = $this->addBlock("line vty 0 15", ConfBlock::POS_LINE);
         $Block->addLine("logging synchronous");
         $Block->addLine("transport input ssh");
+        $Block->addLine("exec prompt timestamp");
+        $Block->addLine("escape-character 3");
         if ($Port != 22 && $Port != 0) {
             $Block->addLine("rotary 1");
         }

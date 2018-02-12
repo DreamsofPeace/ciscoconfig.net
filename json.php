@@ -11,7 +11,8 @@ function getTemplates()
         'TelenetCFN' => 'Router with switch EHWIC for Telenet CFN',
         'StackableSwitch' => 'Stackable layer 2 switch',
         'DMVPN' => 'DMVPN',
-        'StandaloneAP' => 'Standalone access point'
+        'StandaloneAP' => 'Standalone access point',
+        'SwitchL3Stackable' => 'Stackable Layer 3 Switch'
     );
 }
 

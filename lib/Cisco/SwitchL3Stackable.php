@@ -17,14 +17,14 @@ class SwitchL3Stackable extends Common {
         $this->addOpt('MgmtIntf', 'Loopback0', 'string', 'Loopback interfaced used for management');
         $this->addOpt('MgmtIntfIPv4Addr', '192.168.0.2', 'string', 'Loopback interface IP Address');
         $this->addOpt('MgmtIntfIPv4Mask', '255.255.255.255', 'string', 'Subnet Mask');
+        $this->addOpt('TimeZone', 'EST-EDT', 'select:EST-EDT,CST-CDT,MST-MDT,PST-PDT', 'Time Zone / Summer Zone');
 
         $this->addOpt('RoutingProtcol', 'EIGRP', 'select:EIGRP,OSPFv2,OSPFv3', 'Routing Protocol', 'Routing');
+        $this->addOpt('RoutingASIPv4Unicast', '1', 'string', 'Autonomous System', 'Routing');
+        $this->addOpt('RoutingEIGRP', 'NamedMode', 'string', 'EIGRP Instance Name', 'Routing');
+#        $NetworkOpts[] = new ConfigOption('RoutingNetworks', '10.20.30.40', 'string', 'Networks to be advertised', 'Routing');
+#        $this->addOpt('RoutingNetworks', $NetworkOpts, 'listOfListOfOpts');
 
-#        $this->addOpt('MgmtIntf', 'Loopback0', 'string', 'Loopback interfaced used for management', 'Layer-3');
-#        $this->addOpt('ManagementVLAN', 1, 'int');
-#        $this->addOpt('ManagementIP', '192.168.0.2', 'ip');
-#        $this->addOpt('ManagementMask', '255.255.255.0', 'netmask');
-#        $this->addOpt('DefaultGateway', '192.168.0.1', 'ip');
         $this->addOpt('VLANs', '1, 2', 'intarray', 'VLANs to create. Format: 1,2,10-20 (spaces allowed)', 'VLAN');
         $this->addOpt('AccessVLAN', 2, 'int', 'All access ports will be put in this VLAN', 'VLAN');
         $this->addOpt('TrunkPorts', 28, 'int', 'Ports to configure as trunk, format: 1,2,5-9 (spaces allowed)', 'VLAN');
@@ -41,11 +41,7 @@ class SwitchL3Stackable extends Common {
         $this->addOpt('IPDeviceTrackingProbeDelay', 10, 'int', 'Delay device tracking probe by this amount of seconds (range: 0 - 180)', 'Protection');
         $NTPOpts[] = new ConfigOption('IP', '10.20.30.40', 'string');
         $this->addOpt('NTPServers', $NTPOpts, 'listOfListOfOpts');
-/*
-        $SNTPOpts[] = new ConfigOption('IP', '193.104.37.238', 'string');
 
-        $this->addOpt('SNTPServers', $SNTPOpts, 'listOfListOfOpts');
-*/
     }
     
     
@@ -53,6 +49,19 @@ class SwitchL3Stackable extends Common {
     {
         parent::generate();
         
+        if($this->getOptVal('TimeZone') == 'EST-EDT') {
+            $this->addLine('clock timezone EST -5');
+            $this->addLine('clock summer-time EDT recurring');
+        } elseif ($this->getOptVal('TimeZone') == 'CST-CDT'){
+            $this->addLine('clock timezone CST -6');
+            $this->addLine('clock summer-time CDT recurring');
+        } elseif ($this->getOptVal('TimeZone') == 'MST-MDT'){
+            $this->addLine('clock timezone MST -7');
+            $this->addLine('clock summer-time MDT recurring');
+        } elseif ($this->getOptVal('TimeZone') == 'PST-PDT'){
+            $this->addLine('clock timezone PST -8');
+            $this->addLine('clock summer-time PDT recurring');
+        }
         
         if($this->getOptVal('EnableSSH')) {
             $this->EnableSSH(22, false);
@@ -125,13 +134,7 @@ class SwitchL3Stackable extends Common {
         $IntBlock->addLine('no ip unreachables');
         $IntBlock->addLine('no ip proxy-arp');
         $IntBlock->addLine('no ip redirects');
-#        $IntBlock = $this->addBlock("interface vlan {$this->getOptVal('ManagementVLAN')}", ConfBlock::POS_INT);
-#        $IntBlock->addLine('no shutdown');
-#        $IntBlock->addLine("ip address {$this->getOptVal('ManagementIP')} {$this->getOptVal('ManagementMask')}");
-#        $IntBlock->addLine('no ip proxy-arp');
         
-        
-#        $this->addBlock("ip default-gateway {$this->getOptVal('DefaultGateway')}", ConfBlock::POS_ROUTER);
         
         if(count($this->getOptVal('NTPServers')['IP']) > 0)
         {
@@ -151,7 +154,5 @@ class SwitchL3Stackable extends Common {
                 }
             }
         }
-#        $Block = $this->addBlock("ntp server 194.50.97.12", ConfBlock::POS_NTP, true);
-#        $Block->addLine("ntp server 85.234.203.212");
     }
 }

@@ -31,9 +31,9 @@ abstract class Common extends Config {
           $this->addLine("!"); */
 
         $this->addLine("ip dhcp bootp ignore");
-        $this->addLine("clock timezone CET 1 0");
-        $this->addLine("clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00");
-        $this->addLine("logging buffered 4096");
+#        $this->addLine("clock timezone CET 1 0");
+#        $this->addLine("clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00");
+        $this->addLine("logging buffered 66536");
 
         $Block = $this->addBlock('aaa new-model', ConfBlock::POS_AAA, true);
         $Block->addLine("aaa authentication enable default none");

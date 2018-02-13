@@ -17,7 +17,7 @@ class SwitchL3Stackable extends Common {
         $this->addOpt('MgmtIntf', 'Loopback0', 'string', 'Loopback interfaced used for management');
         $this->addOpt('MgmtIntfIPv4Addr', '192.168.0.2', 'string', 'Loopback interface IP Address');
         $this->addOpt('MgmtIntfIPv4Mask', '255.255.255.255', 'string', 'Subnet Mask');
-        $this->addOpt('TimeZone', 'EST-EDT', 'select:EST-EDT,CST-CDT,MST-MDT,PST-PDT', 'Time Zone / Summer Zone');
+        $this->addOpt('TimeZone', 'UTC', 'select:UTC,EST-EDT,CST-CDT,MST-MDT,PST-PDT', 'Time Zone / Summer Zone');
 
         $this->addOpt('RoutingProtcol', 'EIGRP', 'select:EIGRP,OSPFv2,OSPFv3', 'Routing Protocol', 'Routing');
         $this->addOpt('RoutingASIPv4Unicast', '1', 'string', 'Autonomous System', 'Routing');
@@ -61,6 +61,8 @@ class SwitchL3Stackable extends Common {
         } elseif ($this->getOptVal('TimeZone') == 'PST-PDT'){
             $this->addLine('clock timezone PST -8');
             $this->addLine('clock summer-time PDT recurring');
+        } elseif ($this->getOptVal('TimeZone') == 'UTC'){
+            $this->addLine('clock timezone UTC 0');
         }
         
         if($this->getOptVal('EnableSSH')) {

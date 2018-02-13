@@ -89,6 +89,24 @@ class SwitchL3Stackable extends Common {
             $this->addLine("ip device tracking probe delay {$this->getOptVal('IPDeviceTrackingProbeDelay')}");
         }
         
+        if($this->getOptVal('RoutingProtcol') == 'EIGRP') {
+            $this->addLine("router eigrp {$this->getOptVal("RoutingASIPv4Unicast")}");
+            $this->addLine(' !');
+            $this->addLine(" address-family ipv4 unicast autonomous-system {$this->getOptVal("RoutingEIGRP")}");
+            $this->addLine('  !');
+            $this->addLine('  af-interface default');
+            $this->addLine('   passive-interface');
+            $this->addLine('  exit-af-interface');
+#  network 10.4.0.0 0.0.255.255
+#  network 10.200.4.0 0.0.0.255
+            $this->addLine("  eigrp router-id {$this->getOptVal("MgmtIntfIPv4Addr")}");
+
+
+        } elseif ($this->getOptVal('RoutingProtcol') == 'OSPFv2'){
+#            $this->addLine('clock timezone CST -6');
+        } elseif ($this->getOptVal('RoutingProtcol') == 'OSPFv3'){
+#            $this->addLine('clock timezone CST -6');
+        }
         
         /* Ports */
         $i = 1;

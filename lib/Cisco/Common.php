@@ -9,7 +9,6 @@ abstract class Common extends Config {
     public function __construct($Hostname = 'router1.lan.local')
     {
         parent::__construct();
-        $this->addLine("service password-encryption");
         $this->addLine("no service pad");
         $this->addLine("service tcp-keepalives-in");
         $this->addLine("service tcp-keepalives-out");
@@ -18,6 +17,7 @@ abstract class Common extends Config {
         $this->addLine("service password-encryption");
         $this->addLine("service linenumber");
         $this->addLine("service sequence-numbers");
+        $this->addLine("!");
         $this->addLine("no ip forward-protocol nd");
         $this->addLine("no ip source-route");
         /*
@@ -31,9 +31,12 @@ abstract class Common extends Config {
           $this->addLine("!"); */
 
         $this->addLine("ip dhcp bootp ignore");
+        $this->addLine("!");
 #        $this->addLine("clock timezone CET 1 0");
 #        $this->addLine("clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00");
+        $this->addLine("!");
         $this->addLine("logging buffered 66536");
+        $this->addLine("!");
 
         $Block = $this->addBlock('aaa new-model', ConfBlock::POS_AAA, true);
         $Block->addLine("aaa authentication enable default none");
